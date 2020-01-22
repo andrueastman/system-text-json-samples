@@ -62,7 +62,11 @@ namespace SystemTextJsonSamples
             HttpResponseMessage httpResponse = await batchResponseContent.GetResponseByIdAsync("1");
             string responseString = await httpResponse.Content.ReadAsStringAsync();
             Console.WriteLine(responseString);
-            string nextLink = await batchResponseContent.GetNextLinkAsync();
+
+            HttpResponseMessage httpResponse2 = await batchResponseContent.GetResponseByIdAsync("2");
+            responseString = await httpResponse.Content.ReadAsStringAsync();
+            Console.WriteLine(responseString);
+
         }
     }
 }
