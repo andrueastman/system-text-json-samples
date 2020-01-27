@@ -67,6 +67,9 @@ namespace SystemTextJsonSamples
             responseString = await httpResponse.Content.ReadAsStringAsync();
             Console.WriteLine(responseString);
 
+            string nextLink = await batchResponseContent.GetNextLinkAsync();
+            Console.WriteLine(nextLink);
+
         }
     }
 }
