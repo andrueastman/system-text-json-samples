@@ -11,7 +11,7 @@ namespace SystemTextJsonSamples
 {
     public class Program
     {
-        public static async System.Threading.Tasks.Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
             string clientId = "d662ac70-7482-45af-9dc3-c3cde8eeede4";
             string[] scopes = new[] { "User.Read", "Mail.ReadWrite" };
@@ -32,6 +32,17 @@ namespace SystemTextJsonSamples
 
             HttpClient httpClient = GraphClientFactory.Create(delegatingAuthProvider);
 
+            //Test Batch Code
+            await TestBatch(httpClient);
+
+            //Test Delta Response Handler
+
+
+        }
+
+
+        private static async Task TestBatch(HttpClient httpClient)
+        {
             // Create http GET request.
             HttpRequestMessage httpRequestMessage1 = new HttpRequestMessage(HttpMethod.Get, "https://graph.microsoft.com/v1.0/me/");
 
@@ -69,7 +80,7 @@ namespace SystemTextJsonSamples
 
             string nextLink = await batchResponseContent.GetNextLinkAsync();
             Console.WriteLine(nextLink);
-
         }
+
     }
 }
