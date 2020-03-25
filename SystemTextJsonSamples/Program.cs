@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
@@ -14,7 +16,7 @@ namespace SystemTextJsonSamples
         public static async Task Main(string[] args)
         {
             string clientId = "d662ac70-7482-45af-9dc3-c3cde8eeede4";
-            string[] scopes = new[] { "User.Read", "Mail.ReadWrite" };
+            string[] scopes = new[] { "User.Read", "Mail.ReadWrite" , "Calendars.ReadWrite" };
 
             //Create the msal application
             IPublicClientApplication publicClientApplication = PublicClientApplicationBuilder
@@ -33,11 +35,21 @@ namespace SystemTextJsonSamples
             HttpClient httpClient = GraphClientFactory.Create(delegatingAuthProvider);
 
             //Test Batch Code
-            await TestBatch(httpClient);
+            //await TestBatch(httpClient);
 
-            //Test Delta Response Handler
+            //await TestFetchUser(httpClient);
 
+            await TestFetchEvents(httpClient);
 
+        }
+
+        private static async Task TestFetchUser(HttpClient httpClient)
+        {
+            BaseClient baseClient = new BaseClient("https://graph.microsoft.com/v1.0/", httpClient);
+            BaseRequest request = new BaseRequest("https://graph.microsoft.com/v1.0/me/messages", baseClient);
+            User user = await request.SendAsync<User>(null, CancellationToken.None);
+            Console.WriteLine(user.Id);
+            Console.WriteLine(user.DisplayName);
         }
 
 
@@ -48,7 +60,7 @@ namespace SystemTextJsonSamples
 
             // Create http POST request.
             String jsonContent = "{" +
-                        "\"displayName\": \"My Notebook\"" +
+                        "\"displayName\": \"My Notebook2\"" +
                         "}";
             HttpRequestMessage httpRequestMessage2 = new HttpRequestMessage(HttpMethod.Post, "https://graph.microsoft.com/v1.0/me/onenote/notebooks")
             {
@@ -80,6 +92,22 @@ namespace SystemTextJsonSamples
 
             string nextLink = await batchResponseContent.GetNextLinkAsync();
             Console.WriteLine(nextLink);
+        }
+
+        private static async Task TestFetchEvents(HttpClient httpClient)
+        {
+            BaseClient baseClient = new BaseClient("https://graph.microsoft.com/v1.0/", httpClient);
+            BaseRequest request = new BaseRequest("https://graph.microsoft.com/v1.0/me/events", baseClient);
+            UserEventsCollectionResponse eventsCollectionPage = await request.SendAsync<UserEventsCollectionResponse>(null,CancellationToken.None);
+            foreach (var eventExample in eventsCollectionPage.Value.CurrentPage)
+            {
+                Console.WriteLine(eventExample.Id);
+                Console.WriteLine(eventExample.CreatedDateTime);
+                Console.WriteLine(eventExample.BodyPreview);
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+            }
         }
 
     }
