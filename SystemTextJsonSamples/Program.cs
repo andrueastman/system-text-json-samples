@@ -35,9 +35,9 @@ namespace SystemTextJsonSamples
             HttpClient httpClient = GraphClientFactory.Create(delegatingAuthProvider);
 
             //Test Batch Code
-            //await TestBatch(httpClient);
+            await TestBatch(httpClient);
 
-            //await TestFetchUser(httpClient);
+            await TestFetchUser(httpClient);
 
             await TestFetchEvents(httpClient);
 
