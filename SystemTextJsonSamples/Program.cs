@@ -16,7 +16,7 @@ namespace SystemTextJsonSamples
         public static async Task Main(string[] args)
         {
             string clientId = "d662ac70-7482-45af-9dc3-c3cde8eeede4";
-            string[] scopes = new[] { "User.Read", "Mail.ReadWrite" , "Calendars.ReadWrite" };
+            string[] scopes = new[] { "User.Read", "Mail.ReadWrite" , "Calendars.ReadWrite" , "Notes.ReadWrite" };
 
             //Create the msal application
             IPublicClientApplication publicClientApplication = PublicClientApplicationBuilder
@@ -45,16 +45,21 @@ namespace SystemTextJsonSamples
 
         private static async Task TestFetchUser(HttpClient httpClient)
         {
+            Console.WriteLine("Fetching User");
             BaseClient baseClient = new BaseClient("https://graph.microsoft.com/v1.0/", httpClient);
             BaseRequest request = new BaseRequest("https://graph.microsoft.com/v1.0/me/messages", baseClient);
             User user = await request.SendAsync<User>(null, CancellationToken.None);
             Console.WriteLine(user.Id);
             Console.WriteLine(user.DisplayName);
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
         }
 
 
         private static async Task TestBatch(HttpClient httpClient)
         {
+            Console.WriteLine("Fetching Batch");
             // Create http GET request.
             HttpRequestMessage httpRequestMessage1 = new HttpRequestMessage(HttpMethod.Get, "https://graph.microsoft.com/v1.0/me/");
 
@@ -87,15 +92,22 @@ namespace SystemTextJsonSamples
             Console.WriteLine(responseString);
 
             HttpResponseMessage httpResponse2 = await batchResponseContent.GetResponseByIdAsync("2");
-            responseString = await httpResponse.Content.ReadAsStringAsync();
+            responseString = await httpResponse2.Content.ReadAsStringAsync();
             Console.WriteLine(responseString);
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
 
             string nextLink = await batchResponseContent.GetNextLinkAsync();
             Console.WriteLine(nextLink);
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
         }
 
         private static async Task TestFetchEvents(HttpClient httpClient)
         {
+            Console.WriteLine("Fetching Events");
             BaseClient baseClient = new BaseClient("https://graph.microsoft.com/v1.0/", httpClient);
             BaseRequest request = new BaseRequest("https://graph.microsoft.com/v1.0/me/events", baseClient);
             UserEventsCollectionResponse eventsCollectionPage = await request.SendAsync<UserEventsCollectionResponse>(null,CancellationToken.None);
